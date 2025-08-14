@@ -6,7 +6,8 @@ deploy-tf-backend-cf-stack:
 	--region $(AWS_DEFAULT_REGION) \
 	--tags App=$(APP_NAME) Env=$(ENV_NAME) \
 	--region $(AWS_DEFAULT_REGION) \
-	--capabilities CAPABILITY_NAMED_IAM
+	--capabilities CAPABILITY_NAMED_IAM \
+	--parameter-overrides file://iac/bootstrap/parameters.json
 
 destroy-tf-backend-cf-stack:
 	@./build-script/empty-s3.sh empty_s3_bucket_by_name "$(TF_S3_BACKEND_NAME)-$(AWS_ACCOUNT_ID)-$(AWS_DEFAULT_REGION)"
