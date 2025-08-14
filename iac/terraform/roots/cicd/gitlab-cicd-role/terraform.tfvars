@@ -1,0 +1,2 @@
+gitLabGroup        = "###gitProjectGroup###"
+gitLabProject      = "###gitProjectName###"

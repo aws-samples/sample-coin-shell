@@ -1,0 +1,85 @@
+// This is a JSON 5 template that you can use as a reference when you want
+// to run the Create App Wizard in headless mode by supplying a JSON file
+// with values instead of answering the wizard's questions interactively.
+// 
+// To create a JSON file with wizard answers, create a new blank file
+// with a ".json" extension and paste the contents of this file into it.
+// Since JSON does not support comments, you will have to delete all
+// comments from the ".json" file. Finally, fill in the values for each
+// property. Once you've filled in values for all properties, you can run
+// the Create App Wizard in headless mode by passing the location of
+// your ".json" file as the first argument to the create-app.sh script.
+// 
+// Your ".json" file should NOT be committed to version control.
+
+{
+    // Enter the app name:
+    "APP_NAME": "free-form text with min length: 1, max length: 10",
+
+    // Enter the AWS account number used to host the environment:
+    "AWS_ACCOUNT_ID": "12-digit AWS account number or all 0s if no account yet",
+
+    // What is the default AWS region for the application environment?
+    "AWS_DEFAULT_REGION": "any valid AWS region",
+
+    // What is the secondary AWS region for the application environment?
+    "AWS_SECONDARY_REGION": "any valid AWS region|blank",
+
+    // Which CICD technology will your project use?
+    "cicd": "gitlab|empty if useCicd==n",
+
+    // The name of an AWS CLI profile that you want to create (if it does not exist) and map to your environment
+    "coinAwsCliProfileName": "blank|free-form text with min length: 1, max length: 90",
+
+    // Enter your name to mark the "$ENV_NAME" environment as yours:
+    "CREATED_BY": "your name|blank|free-form text with min length: 1, max length: 90",
+
+    // Create a Git repository for your project if it does not exist? 
+    "createRemoteGitRepo": "y|n",
+
+    // Do you want to deploy the CDK v2 bootstrap stack to AWS?
+    "deployCdk2Backend": "y|n",
+
+    // Do you want to push "$ENV_NAME" environment variables to the remote store ($storeName)?
+    "deployRemoteEnvVars": "y|n",
+
+    // Do you want to deploy the CICD resources to AWS?
+    "deployCicdResources": "y|n",
+
+    // Do you want to deploy the Terraform back end stack to AWS
+    "deployTfBackend": "y|n",
+
+    // Enter an environment name:
+    "ENV_NAME": "demo|free-form text with min length: 1, max length: 6",
+
+    // Enter the Git repository domain:
+    "gitRepoDomain": "gitlab.com|free-form text with min length: 0, max length: 60",
+
+    // Enter the GitLab repository group/namespace:
+    // Only used when createRemoteGitRepo=y
+    "gitProjectGroup": "free-form text with min length: 0, max length: 50",
+
+    // Enter the local application directory name:
+    "gitProjectName": "free-form text with min length: 1, max length: 75",
+
+    // Which Git provider will your project use?
+    "gitRepoProvider": "gitlab",
+
+    // Will components of your application be deployed to a secondary region?
+    "hasSecondaryRegion": "y|n",
+
+    // Which Infrastructure as Code technology will your project use?
+    "iac": "terraform|cdk2|cf",
+
+    // Where should the "$GITLAB_PROJECT" directory be created?
+    "appParentDir": "local directory path ending in /",
+
+    // Where do you want to store remote environment variables?
+    "REMOTE_ENV_VAR_LOC": "ssm|gitlab|na",
+
+    // The name of the Terraform back end S3 bucket
+    "TF_S3_BACKEND_NAME": "${APP_NAME}-${ENV_NAME}-tf-back-end|blank if not using Terraform",
+
+    // Do you want a CICD pipeline generated for your project?
+    "useCicd": "y|n"
+}

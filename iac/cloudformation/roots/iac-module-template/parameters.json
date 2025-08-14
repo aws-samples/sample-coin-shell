@@ -1,0 +1,5 @@
+[
+    "appName=###APP_NAME###",
+    "envName=###ENV_NAME###",
+    "paramName=###CUR_DIR_NAME###"
+]

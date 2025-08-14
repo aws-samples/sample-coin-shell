@@ -1,0 +1,159 @@
+# GitLab CICD Pipeline Definition
+
+# We want to allow jobs to be able to set dependencies on one another so that they
+# are executed serially when needed. We also want to allow jobs to be executed
+# directly (without running their dependencies first) if we manually kick off the
+# pipeline.
+
+# When we kick off the pipeline manually, we can run the entire pipeline and
+# enforce all job dependencies by setting the "FULL_DEPLOY" parameter to
+# "true". Additionally, we can pick which jobs should run or not
+# by setting their parameter flags to "true" or "false". For example, let's say
+# the pipeline has two jobs, named "Job1" and "Job2" respectively. Job2
+# depends on Job1 to have been run successfully (at least once) before Job2
+# can run. If we know that Job1 has already run successfully in the past and
+# we just want to run Job2, we can manually start the pipeline and set a
+# DEPLOY_JOB_2 parameter to "true" and set the FULL_DEPLOY parameter to "false".
+
+# To support this ability, each job must be defined in 3 steps. The first step
+# defines an abstract job with a "script" section that lists what commands the
+# job will execute. The second step is to define a job that inherits the "scripts"
+# configuration from the abstract job and then sets the rules for when the job
+# will execute (manually or automatically) and any dependencies on other jobs.
+# The third step is to set up the job to be able to run directly (ignoring any
+# dependencies). This third job will also inherit from the abstract job but it
+# will not declare any dependencies and it should be set to only execute when
+# the pipeline is started manually.
+
+variables:
+  # Parameter Behavior
+  #   If you have set GitLab CICD environment variables with a scope that matches
+  #     ENV_NAME, they will override the harcoded values set in this template
+  #   If REMOTE_ENV_VAR_LOC == "ssm" the pipeline will execute the AWS CLI to pull
+  #     environment variables from the SSM Parameter Store
+  #   If parameters are set manually after clicking the GitLab UI "Run Pipeline" button,
+  #     the manually set parameters will override both the hardcoded template values
+  #     and GitLab CICD environment variables, but not values pulled from
+  #     SSM Parameter Store.
+  #   If none of the above, the below hardcoded values will be used
+  ENV_NAME:
+    value: "###ENV_NAME###" # Set to $CI_COMMIT_BRANCH if you want a branch per environment
+    description: "the environment name"
+  TF_MODE:
+    value: "apply"
+    description: "Terraform mode. Must be plan, apply, or destroy"
+  REMOTE_ENV_VAR_LOC:
+    value: "na"
+    description: "Where environment variables should be stored for access by a CICD pipeline"
+  FULL_DEPLOY:
+    value: "false"
+    description: "if true, run the full deployment using dependency graph"
+  EXECUTE_SAST_SCAN:
+    value: "false"
+    description: "if true, execute the code SAST scans"
+  DEPLOY_JOB1:
+    value: "false"
+    description: "if true, run the job1Direct job"
+  APP_NAME:
+    value: "###APP_NAME###"
+    description: "the application name"
+  AWS_ACCOUNT_ID:
+    value: "###AWS_ACCOUNT_ID###"
+    description: "12 digit AWS account ID to deploy resources to"
+  AWS_CREDS_TARGET_ROLE:
+    value: "arn:aws:iam::${AWS_ACCOUNT_ID}:role/${APP_NAME}-${ENV_NAME}-cicd-role"
+    description: "the AWS IAM role that the CICD pipeline will assume"
+  AWS_DEFAULT_REGION:
+    value: "###AWS_DEFAULT_REGION###"
+    description: "the AWS default region that the CICD pipeline will use"
+  COIN_NO_ENV_FILE:
+    value: "true"
+    description: "a value of true indicates that no JSON file should be read for environment variable values"
+
+stages:
+  - init
+
+include:
+  - local: .gitlab-ci-sast.yml
+
+default:
+  image:
+    name: "$CI_TEMPLATE_REGISTRY_HOST/gitlab-org/terraform-images/releases/1.4:v0.52.2"
+  before_script:
+    - cat /etc/os-release
+    - export TMPDIR=/tmp
+
+    START_INSTALL_PACKAGES
+    - apk update
+    - apk add --no-cache procps
+    - apk add findutils
+    - apk add bash
+    - bash
+    - apk add --no-cache --upgrade grep
+    - apk add --no-cache aws-cli
+    - aws --version
+    - terraform -v
+    END_INSTALL_PACKAGES
+
+    - aws sts get-caller-identity
+    - pwd
+    - ls -la
+    # Note: this if-block can be deleted if no team member is storing
+    # CICD environment variable values in the SSM Parameter Store
+    - '
+      if [ "$REMOTE_ENV_VAR_LOC" == "ssm" ]; then
+
+      ssmEnvJson=$(aws ssm get-parameters-by-path
+      --region "$AWS_DEFAULT_REGION"
+      --max-items 200
+      --path "/$APP_NAME/remoteVars/$ENV_NAME/"
+      --with-decryption
+      --query "Parameters[].{key:Name,value:Value}")
+
+      $(echo $ssmEnvJson | jq -r ". | map(\"export \" + (.key|ltrimstr(\"/$APP_NAME/remoteVars/$ENV_NAME/\")) + \"=\" + .value + \"\")[]")
+
+      fi'
+
+# Rule that will require manually starting a job when the pipeline is running
+.defaultManualRules:
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+      when: manual
+    - if: $CI_PIPELINE_SOURCE == "web" && $FULL_DEPLOY == "true"
+
+# Rule that will automatically start a job when the pipeline is running
+.defaultAutomaticRules:
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+    - if: $CI_PIPELINE_SOURCE == "web" && $FULL_DEPLOY == "true"
+
+.job1:
+  stage: init
+  environment: $ENV_NAME
+  script:
+    - echo Terraform backend S3 bucket is $TF_S3_BACKEND_NAME-$AWS_ACCOUNT_ID-$AWS_DEFAULT_REGION
+    - ./environment/utility-functions.sh exec_tf_for_env COIN_IAC_FIRST_MODULE_PLACEHOLDER
+  artifacts:
+    when: always
+    name: "coin-$CI_PROJECT_NAME-$CI_JOB_NAME-$CI_JOB_STARTED_AT"
+    paths:
+      - ./environment/.log.txt
+    expire_in: 3 months
+
+job1:
+  extends: .job1
+  rules:
+    # Automatically start the job
+    # - !reference [.defaultAutomaticRules, rules]
+
+    # OR Require the job to be started manually
+    - !reference [.defaultManualRules, rules]
+
+  # Set a dependency on other job(s) to ensure they complete before this one runs
+  # needs:
+  #   - someJobName
+
+job1Direct:
+  extends: .job1
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "web" && $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $FULL_DEPLOY == "false" && $DEPLOY_JOB1 == "true"

@@ -1,0 +1,22 @@
+# This file defines the names of the environment variables that are referenced
+# by deployment scripts.
+
+# The application name that is used to name cloud resources.
+# It is best to use a short value in all lowercase with no whitespace to avoid resource name length limits
+APP_NAME
+
+# 12 digit AWS account ID to deploy resources to
+AWS_ACCOUNT_ID
+
+# AWS region used as the default for AWS CLI commands
+# Example: us-east-1
+AWS_DEFAULT_REGION
+
+# The environment name that is used to name cloud resources.
+# It is best to use a short value in all lowercase with no whitespace to avoid resource name length limits
+# Examples: dev, prod, your initials
+ENV_NAME
+
+# Where environment variable values should be stored for remote system access.
+# Set value to 'na' to disable remote storage
+REMOTE_ENV_VAR_LOC

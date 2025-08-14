@@ -1,0 +1,7 @@
+[
+    "appName=###APP_NAME###",
+    "envName=###ENV_NAME###",
+    "accountId=###AWS_ACCOUNT_ID###",
+    "gitLabGroup=###gitProjectGroup###",
+    "gitLabProject=###gitProjectName###"
+]
