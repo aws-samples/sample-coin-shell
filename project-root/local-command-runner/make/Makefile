@@ -1,0 +1,2 @@
+-include environment/Makefile
+export

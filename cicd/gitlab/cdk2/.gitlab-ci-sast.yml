@@ -1,0 +1,91 @@
+# Read more about this feature here: https://docs.gitlab.com/ee/user/application_security/sast/
+#
+# Configure SAST with CI/CD variables (https://docs.gitlab.com/ee/ci/variables/index.html).
+# List of available variables: https://docs.gitlab.com/ee/user/application_security/sast/index.html#available-variables
+
+variables:
+  # Setting this variable will affect all Security templates
+  # (SAST, Dependency Scanning, ...)
+  SECURE_ANALYZERS_PREFIX: "$CI_TEMPLATE_REGISTRY_HOST/security-products"
+  SAST_IMAGE_SUFFIX: ""
+
+  SAST_EXCLUDED_ANALYZERS: ""
+  SAST_EXCLUDED_PATHS: "spec, test, tests, tmp"
+
+sast:
+  stage: init
+  inherit:
+    default: false
+  artifacts:
+    reports:
+      sast: gl-sast-report.json
+  rules:
+    - when: never
+  variables:
+    SEARCH_MAX_DEPTH: 4
+  script:
+    - echo "$CI_JOB_NAME is used for configuration only, and its script should not be executed"
+    - exit 1
+
+.sast-analyzer:
+  extends: sast
+  allow_failure: true
+  # `rules` must be overridden explicitly by each child job
+  # see https://gitlab.com/gitlab-org/gitlab/-/issues/218444
+  script:
+    - /analyzer run
+
+sast-semgrep:
+  extends: .sast-analyzer
+  image:
+    name: "$SAST_ANALYZER_IMAGE"
+  variables:
+    SEARCH_MAX_DEPTH: 20
+    SAST_ANALYZER_IMAGE_TAG: 3
+    SAST_ANALYZER_IMAGE: "$SECURE_ANALYZERS_PREFIX/semgrep:$SAST_ANALYZER_IMAGE_TAG$SAST_IMAGE_SUFFIX"
+  rules:
+    - if: $SAST_DISABLED
+      when: never
+    - if: $SAST_EXCLUDED_ANALYZERS =~ /semgrep/
+      when: never
+    - !reference [.defaultAutomaticRules, rules]
+    - if: $CI_PIPELINE_SOURCE == "web" && $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $FULL_DEPLOY == "false" && $EXECUTE_SAST_SCAN == "true"
+    # - if: $CI_COMMIT_BRANCH
+    #   exists:
+    #     - "**/*.py"
+    #     - "**/*.js"
+    #     - "**/*.jsx"
+    #     - "**/*.ts"
+    #     - "**/*.tsx"
+    #     - "**/*.c"
+    #     - "**/*.go"
+    #     - "**/*.java"
+    #     - "**/*.cs"
+    #     - "**/*.html"
+
+sast-cdk-nag:
+  stage: init
+  environment: $ENV_NAME
+  rules:
+    - if: $SAST_DISABLED
+      when: never
+    - !reference [.defaultAutomaticRules, rules]
+    - if: $CI_PIPELINE_SOURCE == "web" && $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $FULL_DEPLOY == "false" && $EXECUTE_SAST_SCAN == "true"
+  script:
+    # run cdk-nag on each of your CDK apps here
+    - CDK_MODE=cdk-nag ./environment/utility-functions.sh exec_cdk_for_env COIN_IAC_FIRST_MODULE_PLACEHOLDER
+    - '[ -f "./environment/.log.txt" ] && mv "./environment/.log.txt" "./environment/.log-COIN_IAC_FIRST_MODULE_PLACEHOLDER.txt"'
+  cache:
+    - key:
+        files:
+          - iac/roots/COIN_IAC_FIRST_MODULE_PLACEHOLDER/package-lock.json
+          # - iac/roots/COIN_IAC_FIRST_MODULE_PLACEHOLDER/yarn.lock
+      paths:
+        - iac/roots/COIN_IAC_FIRST_MODULE_PLACEHOLDER/node_modules
+  artifacts:
+    when: always
+    name: "coin-$CI_PROJECT_NAME-$CI_JOB_NAME-$CI_JOB_STARTED_AT"
+    paths:
+      - ./environment/.log*
+    expire_in: 2 weeks
+

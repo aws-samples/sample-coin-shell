@@ -1,0 +1,5 @@
+ignore:
+
+  # bats-file is reported as a vulnerabilty but we don't use that npm package
+  # We use a bats-file from a forked repo
+  - vulnerability: GHSA-wvrr-2x4r-394v

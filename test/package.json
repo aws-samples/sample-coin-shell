@@ -1,0 +1,20 @@
+{
+  "name": "coin-bats",
+  "version": "1.0.0",
+  "description": "Bash shell unit tests (using BATS) for Create COIN App",
+  "license": "Apache-2.0",
+  "author": {
+    "name": "Amazon Web Services",
+    "url": "https://aws.amazon.com"
+  },
+  "main": "index.js",
+  "scripts": {
+    "test": "$(npm bin)/bats two.bats"
+  },
+  "devDependencies": {
+    "bats": "github:bats-core/bats-core",
+    "bats-assert": "github:bats-core/bats-assert",
+    "bats-file": "github:bats-core/bats-file",
+    "bats-support": "github:bats-core/bats-support"
+  }
+}

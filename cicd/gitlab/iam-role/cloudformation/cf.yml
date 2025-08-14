@@ -1,0 +1,84 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: "IAM role and policies for the project CICD pipeline"
+
+Parameters:
+  appName:
+    Type: String
+    Description: Application name
+  envName:
+    Type: String
+    Description: Environment name
+  accountId:
+    Type: String
+    Description: AWS account ID
+  gitLabGroup:
+    Type: String
+    Description: GitLab group name
+  gitLabProject:
+    Type: String
+    Description: GitLab project name
+  assumeRoleArn:
+    Type: String
+    Description: The ARN of the role that can assume the CICD role
+    Default: "arn:aws:iam::979517299116:role/gitlab-runners-prod"
+
+Resources:
+  ExamplePolicy:
+    Metadata:
+      cfn_nag:
+        rules_to_suppress:
+          - id: W28
+            reason: "The name of this policy is unlikely to need to change"
+          - id: F5
+            reason: "The CICD policy needs to be broad in order to create resources. If CICD is used in production, limit its permissions."
+    Type: AWS::IAM::ManagedPolicy
+    Properties:
+      ManagedPolicyName: !Sub "${appName}-${envName}-example-policy"
+      Description: Example policy
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Sid: CDK
+            Effect: Allow
+            Action:
+              - sts:AssumeRole
+              - sts:TagSession
+            Resource:
+              - !Sub "arn:aws:iam::${accountId}:role/cdk-*"
+          - Sid: Events
+            Effect: Allow
+            Action:
+              - ssm:*
+            Resource:
+              - !Sub "arn:aws:ssm:*:${accountId}:parameter/${appName}-*"
+
+  CicdRole:
+    Type: AWS::IAM::Role
+    Metadata:
+      cfn_nag:
+        rules_to_suppress:
+          - id: W28
+            reason: "The name of this role is unlikely to need to change"
+          - id: W44
+            reason: "The CICD role needs to be broad in order to create resources. If CICD is used in production, limit its permissions."
+    Properties:
+      RoleName: !Sub "${appName}-${envName}-cicd-role"
+      Description: !Sub "CICD role for use by the ${appName} project"
+      MaxSessionDuration: 10800
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Sid: GitLabCicdPipeline
+            Effect: Allow
+            Principal:
+              AWS: !Ref assumeRoleArn
+            Action:
+              - sts:AssumeRole
+              - sts:TagSession
+            Condition:
+              StringEquals:
+                aws:PrincipalTag/GitLab:Group: !Sub "${gitLabGroup}"
+                aws:PrincipalTag/GitLab:Project: !Sub "${gitLabProject}"
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/PowerUserAccess
+        - !Ref ExamplePolicy

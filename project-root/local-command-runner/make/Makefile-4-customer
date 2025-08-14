@@ -1,0 +1,3 @@
+SHELL := /usr/bin/env bash -euo pipefail -c
+
+APP_ENV_VARS_PLACEHOLDER

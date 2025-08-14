@@ -1,0 +1,21 @@
+Parameters:
+  appName:
+    Type: String
+    Description: Application name
+  envName:
+    Type: String
+    Description: Environment name
+  paramName:
+    Type: String
+    Description: Parameter name
+
+Resources:
+  ExampleParameter:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Type: String
+      Value: bar
+      AllowedPattern: .*
+      Description: The value Foo
+      Name: !Sub "/${appName}/${envName}/cf-${paramName}"
+      Tier: Advanced
