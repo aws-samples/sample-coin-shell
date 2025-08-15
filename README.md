@@ -19,6 +19,18 @@ to Git to prevent accidentally committing sensitive information.
 With COIN Shell, your configuration set is defined in a single place and its settings can be referred to from 
 anywhere in your project. This prevents you from having to update a setting in multiple places.
 
+## Why Was COIN Shell Created?
+
+Before COIN Shell:
+
+* Depending on who sets up a new prototype repository, there is inconsistency in how they go about this
+    * The inconsistency creates a one-off learning curve for team members
+* Starting from scratch every time is a waste of time
+    * People write build jobs and scripts as one-offs. These scripts are often of low quality since they are written in a hurry in order to focus on prototype functionality.
+* People accidentally commit their personal settings into the Git repository. Often, it’s not clear which files a team member needs to configure for their personal setup.
+* If you don’t have a common approach to scaffolding and scripting, you don’t have a single place to add features or bug fixes so that everyone can benefit
+    * Copying and pasting scripts from previous projects does not allow everyone access to the best version of scripts.
+
 COIN Shell helps prevent mistakes. For example, it will validate that you are logged in to the right AWS account
 before it tries to execute IaC. It will also check that your configuration set contains values for each configurable 
 item and warn you if it doesn't. Let's say your teammate commits changes to your project that adds a new configuration
@@ -74,18 +86,6 @@ Detailed documentation can be found [here](./docs/DOCUMENTATION.md).
 * Extract deliverable wizard
     * A customizable script that produces the files that we want to share with others. Can be made to include/exclude certain files based on whether we want to share them or not
 * Supports hooks that can generate configuration files used by other tools
-
-## Why Was COIN Shell Created?
-
-Before COIN Shell:
-
-* Depending on who sets up a new prototype repository, there is inconsistency in how they go about this
-    * The inconsistency creates a one-off learning curve for team members
-* Starting from scratch every time is a waste of time
-    * People write build jobs and scripts as one-offs. These scripts are often of low quality since they are written in a hurry in order to focus on prototype functionality.
-* People accidentally commit their personal settings into the Git repository. Often, it’s not clear which files a team member needs to configure for their personal setup.
-* If you don’t have a common approach to scaffolding and scripting, you don’t have a single place to add features or bug fixes so that everyone can benefit
-    * Copying and pasting scripts from previous projects does not allow everyone access to the best version of scripts.
 
 ## Getting Started
 
