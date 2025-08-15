@@ -120,7 +120,7 @@ EOF
     assert_exists "$generatedAppEnvDir/Makefile"
     assert_exists "$generatedAppEnvDir/coin-app-version"
     assert_exists "$generatedAppEnvDir/README.md"
-    assert_exists "$generatedAppEnvDir/images"
+    assert_exists "$generatedAppEnvDir/docs/images"
 
     # app constants should have APP_NAME
     constantsAppName="$(jq -r '.APP_NAME' "$generatedAppEnvDir/environment-constants.json")"
