@@ -1,9 +1,7 @@
-<div style="max-height: 30%; max-width: 30%;">
-  <img src="./docs/images/coin-shell-logo-transparent.png"
-      alt="COIN Shell"
-  />
-</div>
-
+<img src="./docs/images/coin-shell-logo-transparent.png"
+    alt="COIN Shell"
+    style="width:40%; height:auto;"
+/>
 
 # COIN Shell
 
