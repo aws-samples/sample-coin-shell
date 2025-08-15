@@ -1,3 +1,7 @@
+<img src="./docs/images/coin-shell-logo-transparent.png"
+     alt="COIN Shell"
+     style="max-height: 200px; " />
+
 # COIN Shell
 
 COIN (Collaborate on Infrastructure Now) Shell is a set of shell scripts that makes it easy to generate new
@@ -29,11 +33,11 @@ or AWS Systems Manager Parameter Store instead of being hardcoded.
 
 ## Guides
 
-If you are a Terraform user, see the [COIN Terraform Users Guide](DEV_GUIDE_TERRAFORM.md)
+If you are a Terraform user, see the [COIN Terraform Users Guide](./docs/DEV_GUIDE_TERRAFORM.md)
 
-If you are a CDK user, see the [COIN CDK Users Guide](DEV_GUIDE_CDK.md)
+If you are a CDK user, see the [COIN CDK Users Guide](./docs/DEV_GUIDE_CDK.md)
 
-Detailed documentation can be found [here](DOCUMENTATION.md).
+Detailed documentation can be found [here](./docs/DOCUMENTATION.md).
 
 ## Features
 

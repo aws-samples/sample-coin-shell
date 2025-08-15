@@ -171,8 +171,8 @@ If the Git repository already exists:
 * Should create `environment/README.md` with documentation on Create COIN App
 
 * Should create developer guide documentation that is specific to the IaC type chosen
-  * For Terraform, it should create `environment/DEV_GUIDE_TERRAFORM.md`
-  * For CDK, it should create `environment/DEV_GUIDE_CDK.md`
+  * For Terraform, it should create `environment/docs/DEV_GUIDE_TERRAFORM.md`
+  * For CDK, it should create `environment/docs/DEV_GUIDE_CDK.md`
 
 * Should copy scripts:
   * Should create `environment/aws-regions.sh` that holds the valid choices for AWS regions
