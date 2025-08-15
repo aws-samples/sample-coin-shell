@@ -115,7 +115,7 @@ EOF
     assert_exists "$generatedAppEnvDir/.environment-${envName}.json"
     assert_exists "$generatedAppEnvDir/.log.txt"
     assert_exists "$generatedAppEnvDir/app-env-var-names.txt"
-    assert_exists "$generatedAppEnvDir/DEV_GUIDE_CDK.md"
+    assert_exists "$generatedAppEnvDir/docs/DEV_GUIDE_CDK.md"
     assert_exists "$generatedAppEnvDir/environment-constants.json"
     assert_exists "$generatedAppEnvDir/Makefile"
     assert_exists "$generatedAppEnvDir/coin-app-version"

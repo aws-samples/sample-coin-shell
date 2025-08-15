@@ -593,7 +593,7 @@ create_app () {
     
     # Copy environment files to new app directory
     display "    Copying environment files"
-    mkdir -p "$appEnvDir"
+    mkdir -p "$appEnvDir/docs/images"
 
     if [[ ! -f "$appEnvDir/.cli-profiles.json" ]] && [[ ! -z "$coinAwsCliProfileName" ]] && [[ "$coinAwsCliProfileName" != "blank" ]]; then
         jq -n --arg key "$ENV_NAME" --arg val "$coinAwsCliProfileName" '. + {($key): $val}' > "$appEnvDir/.cli-profiles.json"
@@ -602,8 +602,8 @@ create_app () {
         log "\n      skipped creating $appEnvDir/.cli-profiles.json since the file already exists or coinAwsCliProfileName=\"${coinAwsCliProfileName}\"\n"
     fi
 
-    log "      $appEnvDir/images"
-    cp -r "$projectDir/images/." "$appEnvDir/images"
+    log "      $appEnvDir/docs/images"
+    cp -r "$projectDir/docs/images/." "$appEnvDir/docs/images"
 
     if [[ -f "$projectDir/.choice-cache.json" ]]; then
         log "      $appEnvDir/.choice-cache.json"
@@ -842,7 +842,7 @@ create_app () {
     # Copy project-root files to new app directory
     display "    Creating application root directory files"
     local projectRootTemplateDir=$projectDir/project-root
-    mkdir -p "$appDir"
+    mkdir -p "$appDir" #ANTHONY
     mkdir -p "$appDir/build-script"
 
     log "      $appDir/build-script"
@@ -1114,7 +1114,7 @@ create_app () {
         cp -r "$projectDir/iac/terraform/templates" "$appDir/iac"
 
         # Copy Terraform documentation into environment directory
-        cp "$projectDir/DEV_GUIDE_TERRAFORM.md" "$appEnvDir/DEV_GUIDE_TERRAFORM.md"
+        cp "$projectDir/docs/DEV_GUIDE_TERRAFORM.md" "$appEnvDir/docs/DEV_GUIDE_TERRAFORM.md"
 
         # Create first IaC module for the application
         cp -r "$projectDir/iac/terraform/roots/iac-module-template/." "$appDir/iac/roots/$firstIacModuleName"
@@ -1164,7 +1164,7 @@ create_app () {
         cp "$projectDir/iac/cdk2/roots/README.md" "$appDir/iac/roots/README.md"
 
         # Copy CDK documentation into environment directory
-        cp "$projectDir/DEV_GUIDE_CDK.md" "$appEnvDir/DEV_GUIDE_CDK.md"
+        cp "$projectDir/docs/DEV_GUIDE_CDK.md" "$appEnvDir/docs/DEV_GUIDE_CDK.md"
 
         local cicdDir=$projectDir/iac/cdk2/roots/cicd
         local projectCicdDir=$appDir/iac/roots/cicd

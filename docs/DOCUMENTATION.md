@@ -1,6 +1,6 @@
 # COIN Shell Documentation
 
-This page documents COIN Shell in detail. For a project overview, see the [README](README.md). For details on the latest changes to COIN Shell, see the [CHANGELOG](CHANGELOG.md).
+This page documents COIN Shell in detail. For a project overview, see the [README](../README.md). For details on the latest changes to COIN Shell, see the [CHANGELOG](../CHANGELOG.md).
 
 ## Support for Deploying App to Multiple Environments
 

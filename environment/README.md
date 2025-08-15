@@ -224,7 +224,7 @@ that they are available as environment variables for the function.
 
 ## Visualizing How Template Variables Are Resolved
 
-<img src="../images/templateResolution.svg">
+<img src="./docs/images/templateResolution.svg">
 
 ***
 
@@ -519,7 +519,7 @@ Let's say we have a template file called "example.txt" and we want
 to print what this file would look like with its placeholders 
 resolved with environment-specific values.
 
-<img src="../images/exampleTextFile.jpeg" width="200" height="100" border="1" />
+<img src="./docs/images/exampleTextFile.jpeg" width="200" height="100" border="1" />
 
 We can print what the file would look like once the placeholders are resolved
 against values in the current application environment like so:
