@@ -2,7 +2,7 @@
   "name": "coin-bats",
   "version": "1.0.0",
   "description": "Bash shell unit tests (using BATS) for Create COIN App",
-  "license": "Apache-2.0",
+  "license": "MIT-0",
   "author": {
     "name": "Amazon Web Services",
     "url": "https://aws.amazon.com"

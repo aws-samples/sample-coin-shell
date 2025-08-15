@@ -1,7 +1,7 @@
 {
   "name": "###COIN_IAC_MOD_SPINALCASE###",
   "version": "0.1.0",
-  "license": "Apache-2.0",
+  "license": "MIT-0",
   "author": {
     "name": "Amazon Web Services",
     "url": "https://aws.amazon.com"
