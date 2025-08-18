@@ -1,0 +1,225 @@
+# The configurations that used for the recording, feel free to edit them
+config:
+
+  # Specify a command to be executed
+  # like `/bin/bash -l`, `ls`, or any other commands
+  # the default is bash for Linux
+  # or powershell.exe for Windows
+  command: bash -l
+  
+  # Specify the current working directory path
+  # the default is the current working directory path
+  cwd: /Users/me/code
+  
+  # Export additional ENV variables
+  env:
+    recording: true
+  
+  # Explicitly set the number of columns
+  # or use `auto` to take the current
+  # number of columns of your shell
+  cols: 158
+  
+  # Explicitly set the number of rows
+  # or use `auto` to take the current
+  # number of rows of your shell
+  rows: 45
+  
+  # Amount of times to repeat GIF
+  # If value is -1, play once
+  # If value is 0, loop indefinitely
+  # If value is a positive number, loop n times
+  repeat: 0
+  
+  # Quality
+  # 1 - 100
+  quality: 100
+  
+  # Delay between frames in ms
+  # If the value is `auto` use the actual recording delays
+  frameDelay: auto
+  
+  # Maximum delay between frames in ms
+  # Ignored if the `frameDelay` isn't set to `auto`
+  # Set to `auto` to prevent limiting the max idle time
+  maxIdleTime: 2000
+  
+  # The surrounding frame box
+  # The `type` can be null, window, floating, or solid`
+  # To hide the title use the value null
+  # Don't forget to add a backgroundColor style with a null as type
+  frameBox:
+    type: floating
+    title: Generate App
+    style:
+      border: 0px black solid
+      # boxShadow: none
+      # margin: 0px
+  
+  # Add a watermark image to the rendered gif
+  # You need to specify an absolute path for
+  # the image on your machine or a URL, and you can also
+  # add your own CSS styles
+  watermark:
+    imagePath: null
+    style:
+      position: absolute
+      right: 15px
+      bottom: 15px
+      width: 100px
+      opacity: 0.9
+  
+  # Cursor style can be one of
+  # `block`, `underline`, or `bar`
+  cursorStyle: block
+  
+  # Font family
+  # You can use any font that is installed on your machine
+  # in CSS-like syntax
+  fontFamily: "Monaco, Lucida Console, Ubuntu Mono, Monospace"
+  
+  # The size of the font
+  fontSize: 12
+  
+  # The height of lines
+  lineHeight: 1
+  
+  # The spacing between letters
+  letterSpacing: 0
+  
+  # Theme
+  theme:
+    background: "transparent"
+    foreground: "#afafaf"
+    cursor: "#c7c7c7"
+    black: "#232628"
+    red: "#fc4384"
+    green: "#b3e33b"
+    yellow: "#ffa727"
+    blue: "#75dff2"
+    magenta: "#ae89fe"
+    cyan: "#708387"
+    white: "#d5d5d0"
+    brightBlack: "#626566"
+    brightRed: "#ff7fac"
+    brightGreen: "#c8ed71"
+    brightYellow: "#ebdf86"
+    brightBlue: "#75dff2"
+    brightMagenta: "#ae89fe"
+    brightCyan: "#b1c6ca"
+    brightWhite: "#f9f9f4"
+  
+# Records, feel free to edit them
+records:
+  - delay: 150
+    content: "./sample-coin-shell/create-app.sh"
+  - delay: 140
+    content: "\r\nChecking for updates...\r\n"
+  - delay: 591
+    content: "You are running the latest version of Create COIN App!\r\n\r\n\r\nWelcome to the Create COIN App wizard!\r\n\r\nWould you like to load default selections from previous run (y/n)? [y] "
+  - delay: 1437
+    content: 'y'
+  - delay: 367
+    content: "\r\n"
+  - delay: 30
+    content: "\r\n"
+  - delay: 21
+    content: >-
+      Enter the AWS account number used to host the environment or enter all 0's
+      if you do not have an account yet: [000000000000] 
+  - delay: 1325
+    content: "\r\n\r\n"
+  - delay: 27
+    content: "What is the default AWS region for the application environment?\r\n"
+  - delay: 32
+    content: "1) ap-east-1 (Hong Kong)\r\n2) ap-northeast-1 (Tokyo)\r\n3) ap-northeast-2 (Seoul)\r\n4) ap-northeast-3 (Osaka)\r\n5) ap-south-1 (Mumbai)\r\n6) ap-south-2 (Hyderabad)\r\n7) ap-southeast-1 (Singapore)\r\n8) ap-southeast-2 (Sydney)\r\n9) ap-southeast-3 (Jakarta)\r\n10) ap-southeast-4 (Melbourne)\r\n11) eu-central-1 (Frankfurt)\r\n12) eu-central-2 (Zurich)\r\n13) eu-north-1 (Stockholm)\r\n14) eu-south-1 (Milan)\r\n15) eu-south-2 (Spain)\r\n16) eu-west-1 (Ireland)\r\n17) eu-west-2 (London)\r\n18) eu-west-3 (Paris)\r\n19) us-east-1 (N. Viginia) \e[33m[default]\e(B\e[m\r\n20) us-east-2 (Ohio)\r\n21) us-west-1 (N. Califonia)\r\n22) us-west-2 (Oregon)\r\n#? "
+  - delay: 1721
+    content: "\r\n"
+  - delay: 35
+    content: "\r\nWill components of your application be deployed to a secondary region (y/n)? [n] "
+  - delay: 1800
+    content: "\r\n\r\n"
+  - delay: 30
+    content: >-
+      Enter the application directory name (without any path). Example:
+      "my-app". A directory will be created later on your computer based upon
+      this name if it does not already exist: [my-app] 
+  - delay: 1800
+    content: "\r\n"
+  - delay: 33
+    content: "\r\nWhere should the \"my-app\" directory be created? [/tmp/] "
+  - delay: 1800
+    content: "\r\n"
+  - delay: 5
+    content: "\r\nCreate a Git repository for your project if it does not exist (y/n)? [y] "
+  - delay: 1800
+    content: 'n'
+  - delay: 321
+    content: "\r\n"
+  - delay: 5
+    content: "\r\nThe application name should be short since it is often used\r\nas a prefix to an AWS resource identifier.\r\n"
+  - delay: 1800
+    content: 'Enter the app name: [demo] '
+  - delay: 1800
+    content: "\r\n\r\nThe deployment environment name should be short since it is\r\noften used as part of an AWS resource identifier.\r\nUse your initials if the environment is just for you or use\r\ntraditional names like \"dev\" or \"qa\" for shared environments\r\n"
+  - delay: 1800
+    content: 'Enter an environment name: [dev] '
+  - delay: 1800
+    content: "\r\n\r\n"
+  - delay: 1800
+    content: "Which Infrastructure as Code technology will your project use?\r\n"
+  - delay: 22
+    content: "1) Terraform \e[33m[default]\e(B\e[m\r\n2) CDK v2 (TypeScript)\r\n3) CloudFormation\r\n#? "
+  - delay: 1398
+    content: "\r\n"
+  - delay: 150
+    content: "\r\nRequired Terraform Version: 1.8.0 or greater\r\nYour Terraform Version: Terraform v1.12.2\r\non darwin_arm64\r\n\r\nTerraform state files are backed up to an S3 bucket.\r\nEach application environment will use a unique bucket\r\nthat can store multiple state files (1 per root Terraform\r\nmodule). The bucket name used by your envrionment will be\r\n\"demo-dev-tf-back-end\".\r\n\r\n"
+  - delay: 21
+    content: >-
+      Enter the name of a Terraform root module that you want to create in your
+      new project: [demo] 
+  - delay: 1800
+    content: "\r\n"
+  - delay: 5
+    content: "\r\n"
+  - delay: 34
+    content: 'Do you want a CICD pipeline generated for your project (y/n)? [n] '
+  - delay: 1800
+    content: "\r\n\r\nYou can optionally store your environment variables remotely for reference by your teammates.\r\n\r\n"
+  - delay: 17
+    content: "Where do you want to store remote environment variables?\r\n"
+  - delay: 14
+    content: "1) AWS SSM Parameter Store\r\n2) GitLab (requires Maintainer privileges)\r\n3) Do not store \e[33m[default]\e(B\e[m\r\n#? "
+  - delay: 1648
+    content: "\r\n"
+  - delay: 24
+    content: "\e[0;36m\r\nGenerating new application at /tmp/my-app ...\e[0m\r\n    Copying environment files\r\n"
+  - delay: 222
+    content: "    Configuring application environment variable names\r\n"
+  - delay: 111
+    content: "    Configuring application environment constants\r\n    Configuring application environment JSON settings\r\n"
+  - delay: 108
+    content: "    Marking coin app version\r\n"
+  - delay: 31
+    content: "    Creating application root directory files\r\n"
+  - delay: 103
+    content: "    Customizing Makefile\r\n"
+  - delay: 118
+    content: "    Configuring IaC\r\n"
+  - delay: 289
+    content: "\r\n\e[0;36mFinished generating application. Executing selected deployment steps...\e[0m\r\n\r\n\r\n\e[0;32mCongratulations! Your application has been created at /tmp/my-app\e[0m\r\n\r\nYour entries have been saved to your project's environment/.environment-dev.json file.\r\nThis file can be modified by you as necessary.\r\n\r\nA Terraform module has been created for you under your project's /iac/roots/demo directory\r\n\r\n\e[0;36mPossible Next Steps:\e[0m\r\n  * Let your teammates know how to download the new application.\r\n    They can configure their own application environment by running \"make ce\" from the command line.\r\n  * Update your project's environment/.environment-dev.json file and set a real AWS account number instead of all 0's.\r\n  * Familiarize yourself with the helpful utilities in the environment/Makefile.\r\n    * To see a list of available Make target names, just type \"make\" on the command line\r\n    * You can add new environment-specific placeholders by editing your project's \"environment/app-env-var-names.txt\" file\r\n  * Create a new IaC module with a custom name by entering \"make cim\" on the command line\r\n  * When you are ready to deliver the solution to your customer, you can use the\r\n    Extract Deliverable Wizard by running \"make extract-deliverable\" from\r\n    your project's environment directory.\r\n  * You can deploy the demo module to AWS by running \"make deploy-demo\".\r\n    * Update or replace the demo module to include your application's code.\r\n\r\n"
+  - delay: 908
+    content: cd /tmp/my-app
+  - delay: 394
+    content: make print-current-environment
+  - delay: 239
+    content: "\r\n\e[?2004l\r"
+  - delay: 1180
+    content: "\r\n"
+  - delay: 8
+    content: "\r\n\e[0;36mHere are the values from your current environment (dev):\e[0m\r\n"
+  - delay: 7
+    content: "\e[1;39m{\r\n  \e[0m\e[1;34m\"APP_NAME\"\e[0m\e[1;39m: \e[0m\e[0;32m\"demo\"\e[0m\e[1;39m,\r\n  \e[0m\e[1;34m\"AWS_ACCOUNT_ID\"\e[0m\e[1;39m: \e[0m\e[0;32m\"000000000000\"\e[0m\e[1;39m,\r\n  \e[0m\e[1;34m\"AWS_DEFAULT_REGION\"\e[0m\e[1;39m: \e[0m\e[0;32m\"us-east-1\"\e[0m\e[1;39m,\r\n  \e[0m\e[1;34m\"ENV_NAME\"\e[0m\e[1;39m: \e[0m\e[0;32m\"dev\"\e[0m\e[1;39m,\r\n  \e[0m\e[1;34m\"REMOTE_ENV_VAR_LOC\"\e[0m\e[1;39m: \e[0m\e[0;32m\"na\"\e[0m\e[1;39m,\r\n  \e[0m\e[1;34m\"TF_S3_BACKEND_NAME\"\e[0m\e[1;39m: \e[0m\e[0;32m\"demo-dev-tf-back-end\"\e[0m\e[1;39m\r\n\e[1;39m}\e[0m\r\n\r\n"
+  - delay: 1000
+    content: "\r\n\e[?2004l\r"
+

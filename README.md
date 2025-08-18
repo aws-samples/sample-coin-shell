@@ -1,6 +1,6 @@
 <img src="./docs/images/coin-shell-logo-transparent.png"
     alt="COIN Shell"
-    style="width:40%; height:auto;"
+    style="width:35%; height:auto;"
 />
 
 # COIN Shell
@@ -18,6 +18,11 @@ to Git to prevent accidentally committing sensitive information.
 
 With COIN Shell, your configuration set is defined in a single place and its settings can be referred to from 
 anywhere in your project. This prevents you from having to update a setting in multiple places.
+
+<img src="./docs/images/coin-shell-demo.gif"
+    alt="COIN Shell Demo"
+    style="width:90%; height:auto;"
+/>
 
 ## Why Was COIN Shell Created?
 
