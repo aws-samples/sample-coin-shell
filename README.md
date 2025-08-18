@@ -23,7 +23,7 @@ anywhere in your project. This prevents you from having to update a setting in m
 
 Before COIN Shell:
 
-* Depending on who sets up a new prototype repository, there is inconsistency in how they go about this
+* Depending on who sets up a new application repository, there is inconsistency in how they go about this
     * The inconsistency creates a one-off learning curve for team members
 * Starting from scratch every time is a waste of time
     * People write build jobs and scripts as one-offs. These scripts are often of low quality since they are written in a hurry in order to focus on prototype functionality.
