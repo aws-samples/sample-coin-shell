@@ -625,6 +625,12 @@ does_current_env_setting_exist () {
 # param1: OPTIONAL. the environment name. Defaults to the current environment name
 set_aws_cli_profile () {
     log "\nset_aws_cli_profile was called."
+
+    if [[ ! -z "$CODEBUILD_BUILD_ID" ]] || [[ "$CI" == "true" ]]; then
+        log "Setting AWS CLI profile is disabled since the app appears to be running on a continuous integration server."
+        return 0
+    fi
+
     local profileJsonFile="$projectEnvDir/.cli-profiles.json"
     if [[ -f "$profileJsonFile" ]]; then
         local currentEnv="$1"
