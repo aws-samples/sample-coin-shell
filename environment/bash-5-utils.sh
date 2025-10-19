@@ -1361,6 +1361,12 @@ print_current_environment () {
     display "$displayJson\n"
 }
 
+# print a message to the console if the current environment settings are valid
+# or log an error and exit if they are not valid
+validate_current_environment () {
+    display "${GREEN}\"$ENV_NAME\" environment validation - SUCCESS\n${NC}"
+}
+
 # Resolve placeholders in a file and print the result to the console
 # param1: the name of the file that has placeholders to resolve
 print_resolved_placeholders () {

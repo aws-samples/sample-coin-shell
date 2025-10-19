@@ -158,6 +158,11 @@ This action reverses the changes made by `backup-resolve-template-files`
 
 Example: make util f=switch_local_environment
 
+## validate-current-environment or vce
+
+* Should exit with an error and print a detailed message if configurations for the current environment are invalid
+* Should print a success message if configurations for the current environment are valid
+
 ## validate-template-files or vtf
 
 * Should perform template resolution without leaving template files in a changed state
