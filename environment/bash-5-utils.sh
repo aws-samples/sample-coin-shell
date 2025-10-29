@@ -659,6 +659,14 @@ set_aws_cli_profile () {
     fi
 }
 
+# Calls "aws sso login" based on the AWS CLI profile for the current environment
+# and then prints the caller identity and session expiration time
+aws_sso_login () {
+    set_aws_cli_profile
+    aws sso login
+    get_caller_identity
+}
+
 # Creates an empty local environment file with the supplied envirnment name
 # param1: the environment name
 create_env_var_file () {
