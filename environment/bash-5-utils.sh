@@ -2996,7 +2996,11 @@ get_caller_identity () {
 
     cliExpires=$(aws configure export-credentials | jq -r '.Expiration')
     if [[ "$cliExpires" == "null" ]]; then
-        echo -e "\nCannot determine session expiration since you are not logged in using an AWS_PROFILE\n"
+        if [[ -z "$AWS_PROFILE" ]]; then
+            echo -e "\nCannot determine session expiration since you are not logged in using an AWS_PROFILE\n"
+        else
+            echo -e "\nCannot determine session expiration since session expiration data is unavailable for AWS_PROFILE \"$AWS_PROFILE\"\n"
+        fi
     else
         echo -e -n "\n${CYAN}current session expires: ${NC}"
         cliExpiresNoOffset=${cliExpires%+*}
