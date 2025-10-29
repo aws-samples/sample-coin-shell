@@ -69,6 +69,14 @@ print-current-environment:
 # Simple print-current-environment shortcut
 pce: print-current-environment
 
+# Print a success message if the current environment settings are valid
+# or log an error and exit if they are not valid
+validate-current-environment:
+    @$(ENV_PATH)utility-functions.sh validate_current_environment
+ 
+# Simple validate-current-environment shortcut
+vce: validate-current-environment
+
 # Get current COIN environment variable exports to paste into your shell
 export-current-environment:  ## Get current COIN environment variable exports to paste into your shell (alias: ece)
 	@$(ENV_PATH)utility-functions.sh echo_export_local_app_env_vars
