@@ -239,6 +239,13 @@ get-caller-identity:
 # Simple get-caller-identity shortcut
 gci: get-caller-identity
 
+# Log in to the AWS CLI with SSO using the profile for the current environment
+aws-sso-login:
+	@$(ENV_PATH)utility-functions.sh aws_sso_login
+
+# Simple aws-sso-login shortcut
+asl: aws-sso-login
+
 # Print the configurations for upgrading the application to the latest standards
 print-upgrade-configs:
 	$(ENV_PATH)utility-functions.sh get_coin_upgrade_configs
