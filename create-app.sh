@@ -958,7 +958,21 @@ create_app () {
     if [[ "$iac" == "terraform" ]]; then
 
         # upgrade-mode should update environment/Makefile, just not root Makefile
-        cat "$makeDir/terraform/Makefile" >> "$envMakeFilePath"
+        # cat "$makeDir/terraform/Makefile" >> "$envMakeFilePath"
+
+        # Put commands from terraform-utils into the "COIN General Utilities" help section
+        # and commands from wizard into the "COIN WIZARDS" help section
+        local generalUtilsStartLine=$(sed -n "/@ COIN General Utilities/=" "$makeDir/Makefile")
+        ((generalUtilsStartLine++)) # Increments line number
+        local wizardsStartLine=$(sed -n "/@ COIN Wizards/=" "$makeDir/Makefile")
+        ((wizardsStartLine++)) # Increments line number
+        if [[ "$OSTYPE" == "darwin"* ]]; then
+            sed -i "" "${generalUtilsStartLine}r $makeDir/terraform/terraform-utils/Makefile" "$envMakeFilePath"
+            sed -i "" "${wizardsStartLine}r $makeDir/terraform/wizard/Makefile" "$envMakeFilePath"
+        else
+            sed -i "${generalUtilsStartLine}r $makeDir/terraform/terraform-utils/Makefile" "$envMakeFilePath"
+            sed -i "${wizardsStartLine}r $makeDir/terraform/wizard/Makefile" "$envMakeFilePath"
+        fi
 
         if [[ "$coinAppExists" == "n" ]] || [[ "$coinConfigExists" == "n" ]] || [[ "$destructiveUpgrade" == "y" ]]; then
 
@@ -977,7 +991,20 @@ create_app () {
     elif [[ "$iac" == "cdk2" ]]; then
 
         # upgrade-mode should update environment/Makefile, just not root Makefile
-        cat "$makeDir/cdk2/Makefile" >> "$envMakeFilePath"
+
+        # Put commands from cdk-utils into the "COIN General Utilities" help section
+        # and commands from wizard into the "COIN WIZARDS" help section
+        local generalUtilsStartLine=$(sed -n "/@ COIN General Utilities/=" "$makeDir/Makefile")
+        ((generalUtilsStartLine++)) # Increments line number
+        local wizardsStartLine=$(sed -n "/@ COIN Wizards/=" "$makeDir/Makefile")
+        ((wizardsStartLine++)) # Increments line number
+        if [[ "$OSTYPE" == "darwin"* ]]; then
+            sed -i "" "${generalUtilsStartLine}r $makeDir/cdk2/cdk-utils/Makefile" "$envMakeFilePath"
+            sed -i "" "${wizardsStartLine}r $makeDir/cdk2/wizard/Makefile" "$envMakeFilePath"
+        else
+            sed -i "${generalUtilsStartLine}r $makeDir/cdk2/cdk-utils/Makefile" "$envMakeFilePath"
+            sed -i "${wizardsStartLine}r $makeDir/cdk2/wizard/Makefile" "$envMakeFilePath"
+        fi
 
         if [[ "$coinAppExists" == "n" ]] || [[ "$coinConfigExists" == "n" ]] || [[ "$destructiveUpgrade" == "y" ]]; then
             cat "$rootMakeDir/cdk2/bootstrap/Makefile" >> "$rootEnvMakeFilePath"

@@ -1,5 +1,9 @@
 # COIN Shell Release Notes
 
+# November 2025
+
+* Added `make help` and `make coin-help` commands that will print out documentation for each command, grouped by category
+
 # October 2025
 
 * Perform validation of your environmnt configurations either directly or automatically before running a script
