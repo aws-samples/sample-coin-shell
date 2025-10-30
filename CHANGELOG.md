@@ -2,6 +2,7 @@
 
 # October 2025
 
+* Added a `make help` command that will print out documentation for each command, grouped by category
 * Perform validation of your environmnt configurations either directly or automatically before running a script
   * To use, call `make validate-current-environment` directly or add the validation step to an existing Make target
 * Easily perform an `aws sso login` based on your current environment by running `make aws-sso-login`
