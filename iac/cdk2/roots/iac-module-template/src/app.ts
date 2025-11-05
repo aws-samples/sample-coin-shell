@@ -27,7 +27,8 @@ async function main() {
 
     new ###COIN_IAC_MOD_CAMELCASE###Stack(app, `${config.appName}-${config.envName}-###COIN_IAC_MOD_SPINALCASE###`, {
         config,
-        env: { account: config.awsAccountId, region: config.awsDefaultRegion }
+        env: { account: config.awsAccountId, region: config.awsDefaultRegion },
+        synthesizer: config.stackSynthesizer,
     });
 
     app.synth();
