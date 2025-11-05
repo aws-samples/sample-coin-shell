@@ -6,7 +6,7 @@
 #   make diff-COIN_IAC_FIRST_MODULE_PLACEHOLDER
 #   OR
 #   make diff-COIN_IAC_FIRST_MODULE_PLACEHOLDER args="myStackId --exclusively"
-diff-COIN_IAC_FIRST_MODULE_PLACEHOLDER:
+diff-COIN_IAC_FIRST_MODULE_PLACEHOLDER: ## CDK diff on the COIN_IAC_FIRST_MODULE_PLACEHOLDER module
 	CDK_MODE=diff $(ENV_PATH)utility-functions.sh exec_cdk_for_env COIN_IAC_FIRST_MODULE_PLACEHOLDER "$(args)"
 
 # Resolves all environment variables and executes "cdk deploy" 
@@ -16,7 +16,7 @@ diff-COIN_IAC_FIRST_MODULE_PLACEHOLDER:
 #   make deploy-COIN_IAC_FIRST_MODULE_PLACEHOLDER
 #   OR
 #   make deploy-COIN_IAC_FIRST_MODULE_PLACEHOLDER args="myStackId --exclusively"
-deploy-COIN_IAC_FIRST_MODULE_PLACEHOLDER:
+deploy-COIN_IAC_FIRST_MODULE_PLACEHOLDER: ## CDK deploy on the COIN_IAC_FIRST_MODULE_PLACEHOLDER module
 	$(ENV_PATH)utility-functions.sh exec_cdk_for_env COIN_IAC_FIRST_MODULE_PLACEHOLDER "$(args)"
 
 # Same as deploy-COIN_IAC_FIRST_MODULE_PLACEHOLDER but targets the secondary region instead of the primary region
@@ -25,7 +25,7 @@ deploy-COIN_IAC_FIRST_MODULE_PLACEHOLDER:
 #   make deploy-COIN_IAC_FIRST_MODULE_PLACEHOLDER-secondary-region
 #   OR
 #   make deploy-COIN_IAC_FIRST_MODULE_PLACEHOLDER-secondary-region args="myStackId --exclusively"
-deploy-COIN_IAC_FIRST_MODULE_PLACEHOLDER-secondary-region:
+deploy-COIN_IAC_FIRST_MODULE_PLACEHOLDER-secondary-region: ## CDK deploy on the COIN_IAC_FIRST_MODULE_PLACEHOLDER module (secondary region)
 	COIN_OVERRIDE_AWS_DEFAULT_REGION=$(AWS_SECONDARY_REGION) $(ENV_PATH)utility-functions.sh exec_cdk_for_env COIN_IAC_FIRST_MODULE_PLACEHOLDER "$(args)"
 
 # Resolves all environment variables and executes "cdk destroy"
@@ -35,11 +35,11 @@ deploy-COIN_IAC_FIRST_MODULE_PLACEHOLDER-secondary-region:
 #   make destroy-COIN_IAC_FIRST_MODULE_PLACEHOLDER
 #   OR
 #   make destroy-COIN_IAC_FIRST_MODULE_PLACEHOLDER args="myStackId --exclusively"
-destroy-COIN_IAC_FIRST_MODULE_PLACEHOLDER:
+destroy-COIN_IAC_FIRST_MODULE_PLACEHOLDER: ## CDK destroy on the COIN_IAC_FIRST_MODULE_PLACEHOLDER module
 	CDK_MODE=destroy $(ENV_PATH)utility-functions.sh exec_cdk_for_env COIN_IAC_FIRST_MODULE_PLACEHOLDER "$(args)"
 
 # Deploy all targets in the correct order
-deploy-all: deploy-COIN_IAC_FIRST_MODULE_PLACEHOLDER
+deploy-all: deploy-COIN_IAC_FIRST_MODULE_PLACEHOLDER ## Deploy all targets in the correct order
 
 # Destroy all targets in the correct order
-destroy-all: destroy-COIN_IAC_FIRST_MODULE_PLACEHOLDER
+destroy-all: destroy-COIN_IAC_FIRST_MODULE_PLACEHOLDER ## Destroy all targets in the correct order

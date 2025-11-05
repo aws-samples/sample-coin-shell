@@ -1,5 +1,10 @@
 # COIN Shell Release Notes
 
+# November 2025
+
+* Added `make help` and `make coin-help` commands that will print out documentation for each command, grouped by category
+* CDK stack synthesizer now defaults to using the current user's IAM credentials to perform deployments instead of trying to assume a role created by the CDK bootstrap.
+
 # October 2025
 
 * Perform validation of your environmnt configurations either directly or automatically before running a script
