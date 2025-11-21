@@ -2161,6 +2161,19 @@ set_project_cdk () {
         return 0
     fi
 
+    # check for the use of workspaces in a parent directory
+    local parentDir="$(dirname "$lclRootModDir")"
+    while [[ "$parentDir" != "/" && "$parentDir" != "." ]]; do
+        if [[ -f "$parentDir/package.json" ]]; then
+            if grep -q "\"workspaces\"" "$parentDir/package.json"; then
+                lclRootModDir="$parentDir"
+                display "Detected package.json with workspaces in parent directory: $parentDir\n"
+                break
+            fi
+        fi
+        parentDir="$(dirname "$parentDir")"
+    done
+
     local runInstall="n"
     if [[ ! -d "$lclRootModDir/node_modules" ]]; then
         runInstall="y"
