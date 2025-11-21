@@ -2161,6 +2161,19 @@ set_project_cdk () {
         return 0
     fi
 
+    # check for the use of workspaces in a parent directory
+    local parentDir="$(dirname "$lclRootModDir")"
+    while [[ "$parentDir" != "/" && "$parentDir" != "." ]]; do
+        if [[ -f "$parentDir/package.json" ]]; then
+            if grep -q "\"workspaces\"" "$parentDir/package.json"; then
+                lclRootModDir="$parentDir"
+                display "Detected package.json with workspaces in parent directory: $parentDir\n"
+                break
+            fi
+        fi
+        parentDir="$(dirname "$parentDir")"
+    done
+
     local runInstall="n"
     if [[ ! -d "$lclRootModDir/node_modules" ]]; then
         runInstall="y"
@@ -2268,9 +2281,10 @@ exec_cdk_for_env () {
     local rootModuleDir="$projectIacRootModuleDir/$rootModuleName"
 
     if [[ "$projectCdkClearCache" == "y" ]] && [[ "$CDK_MODE" == "deploy" ]]; then
-        display "Clearing CDK context before running deploy. See 'projectCdkClearCache' in constants.sh to disable."
-        rm "$rootModuleDir/cdk.context.json" 2> /dev/null || true
-        # cdk context --clear
+        if [[ -f "$rootModuleDir/cdk.context.json" ]]; then
+            display "Clearing CDK context (except for acknowledged-issue-numbers) before running deploy. See 'projectCdkClearCache' in constants.sh to disable."
+            jq '{"acknowledged-issue-numbers": .["acknowledged-issue-numbers"]}' $rootModuleDir/cdk.context.json > $rootModuleDir/temp.json && mv $rootModuleDir/temp.json $rootModuleDir/cdk.context.json
+        fi
     fi
     
     display "\n${CYAN}Executing \"cdk $CDK_MODE\" on $rootModuleDir${NC}"

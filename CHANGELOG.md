@@ -4,6 +4,9 @@
 
 * Added `make help` and `make coin-help` commands that will print out documentation for each command, grouped by category
 * CDK stack synthesizer now defaults to using the current user's IAM credentials to perform deployments instead of trying to assume a role created by the CDK bootstrap.
+* Fix project-specific CDK binary detection so that it can work with yarn/npm workspaces
+* Improve CDK context-clearing behavior to not clear acknowledged-issue-numbers
+* Use latest versions of aws-cdk and aws-cdk-lib
 
 # October 2025
 
