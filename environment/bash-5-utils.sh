@@ -2281,9 +2281,10 @@ exec_cdk_for_env () {
     local rootModuleDir="$projectIacRootModuleDir/$rootModuleName"
 
     if [[ "$projectCdkClearCache" == "y" ]] && [[ "$CDK_MODE" == "deploy" ]]; then
-        display "Clearing CDK context before running deploy. See 'projectCdkClearCache' in constants.sh to disable."
-        rm "$rootModuleDir/cdk.context.json" 2> /dev/null || true
-        # cdk context --clear
+        if [[ -f "$rootModuleDir/cdk.context.json" ]]; then
+            display "Clearing CDK context (except for acknowledged-issue-numbers) before running deploy. See 'projectCdkClearCache' in constants.sh to disable."
+            jq '{"acknowledged-issue-numbers": .["acknowledged-issue-numbers"]}' $rootModuleDir/cdk.context.json > $rootModuleDir/temp.json && mv $rootModuleDir/temp.json $rootModuleDir/cdk.context.json
+        fi
     fi
     
     display "\n${CYAN}Executing \"cdk $CDK_MODE\" on $rootModuleDir${NC}"
