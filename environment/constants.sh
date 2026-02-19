@@ -65,6 +65,10 @@ projectIacDir="${projectDir}${projectIacPath}"
 projectIacRootModulePath="${projectIacPath}/roots"
 projectIacRootModuleDir="${projectDir}${projectIacRootModulePath}"
 
+# Set the directory where shared constructs are stored for CDK projects.
+projectSharedContructsPath="/constructs"
+projectSharedContructsDir="${projectIacDir}${projectSharedContructsPath}"
+
 # Set the directory where application build scripts are stored
 projectBuildScriptPath="/build-script"
 projectBuildScriptDir="${projectDir}${projectBuildScriptPath}"

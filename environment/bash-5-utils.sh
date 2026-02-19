@@ -1914,7 +1914,7 @@ validate_tf_state_for_env () {
 
 # Validates that you are logged in to correct AWS account, then resolves environment variable placeholders in files in the requested 
 # root Terraform module directory and then executes the supplied Terraform command
-# param1: the name of the module to run. Should be under iac/roots.
+# param1: the name of the module to run. Should be under iac/roots or where projectIacRootModulePath is set to.
 # param2: the Terraform command to execute against the module (e.g. "terraform init")
 exec_tf_command_for_env () {
     if ! command -v terraform --version &> /dev/null
@@ -1934,7 +1934,7 @@ exec_tf_command_for_env () {
         exit 1
     fi
 
-    # Convert simple module name to a path under iac/roots/
+    # Convert simple module name to a path under iac/roots/ or where projectIacRootModulePath is set to
     local rootModuleDir=$projectIacRootModuleDir/$myTemplateDirSimpleName
 
     if [[ ! -d "$rootModuleDir" ]]; then
@@ -1971,7 +1971,7 @@ exec_tf_command_for_env () {
 # Resolves environment variable placeholders in files in the requested 
 # root Terraform module directory and then executes Terraform for the 
 # current Terraform mode (plan, appy, destroy)
-# param1: the name of the module to run. Should be under iac/roots.
+# param1: the name of the module to run. Should be under iac/roots or where projectIacRootModulePath is set to.
 exec_tf_for_env () {
     if ! command -v terraform --version &> /dev/null
     then
@@ -2071,7 +2071,7 @@ get_terraform_module_names () {
 }
 
 # Run checkov against a Terraform module
-# param1: the name of the module to run. Should be under iac/roots.
+# param1: the name of the module to run. Should be under iac/roots or where projectIacRootModulePath is set to.
 exec_checkov () {
     local myTemplateDirSimpleName="$1"
 
@@ -2147,6 +2147,73 @@ exec_package_manager_install () {
     fi
 }
 
+# Builds Yarn workspace packages if appropriate. This allows packages to depend on each other
+# and it will compile all workspace modules before running CDK, which prevents issues with 
+# types not being resolved in ts-node when using a shared constructs package in a workspace.
+exec_package_manager_build_if_needed () {
+
+    if [[ "$COIN_SKIP_WORKSPACE_BUILD" == "y" ]]; then
+        display "\nSkipping package manager build since COIN_SKIP_WORKSPACE_BUILD is set to \"y\""
+        return 0
+    else
+        log "\nChecking if package manager build is needed based on project settings and workspace configuration"
+    fi
+
+    if [[ "$coinPackageManager" != "yarn" ]]; then
+        log "Skipping package manager build since the package manager is not yarn"
+        return 0
+    fi
+
+    # Check if the project is using workspaces by looking for "workspaces" in the package.json 
+    # file in the projectIacDir. If not, do nothing.
+    if [[ -z "$projectIacDir" ]] || [[ ! -f "$projectIacDir/package.json" ]]; then
+        log "Skipping package manager build since package.json file was not found at the project CDK root directory: $projectIacDir/package.json"
+        return 0
+    fi
+
+    if ! grep -q '"workspaces"' "$projectIacDir/package.json"; then
+        log "Skipping package manager build since no workspaces were detected in $projectIacDir/package.json"
+        return 0
+    fi
+
+    if [[ ! -z "$projectSharedContructsDir" ]]; then
+        workspaceBuildDir="$projectSharedContructsDir"
+    else
+        workspaceBuildDir="$projectIacDir"
+    fi
+
+    display "\nDetected Yarn workspaces; executing \"yarn build\" in $workspaceBuildDir"
+    display "To disable this build step, set the environment variable COIN_SKIP_WORKSPACE_BUILD to \"y\""
+
+    pushd "$workspaceBuildDir" > /dev/null || return 1
+    local buildTimingMode
+    local buildStart
+    if [[ -n "${EPOCHREALTIME:-}" ]]; then
+        buildTimingMode="epoch"
+        buildStart="$EPOCHREALTIME"
+    else
+        buildTimingMode="seconds"
+        buildStart="$(date +%s)"
+    fi
+
+    yarn build
+    local buildExit=$?
+
+    if [[ "$buildTimingMode" == "epoch" ]]; then
+        local buildEnd="$EPOCHREALTIME"
+        local buildDuration
+        buildDuration="$(awk -v s="$buildStart" -v e="$buildEnd" 'BEGIN { printf "%.3f", (e - s) }')"
+        display "yarn build took ${buildDuration}s"
+    else
+        local buildEnd
+        buildEnd="$(date +%s)"
+        display "yarn build took $(( buildEnd - buildStart ))s"
+    fi
+
+    popd > /dev/null || true
+    return $buildExit
+}
+
 # Sets global projectCdk variable
 # param1: the IaC root module directory
 set_project_cdk () {
@@ -2160,6 +2227,19 @@ set_project_cdk () {
         projectCdk="cdk"
         return 0
     fi
+
+    # check for the use of workspaces in a parent directory
+    local parentDir="$(dirname "$lclRootModDir")"
+    while [[ "$parentDir" != "/" && "$parentDir" != "." ]]; do
+        if [[ -f "$parentDir/package.json" ]]; then
+            if grep -q "\"workspaces\"" "$parentDir/package.json"; then
+                lclRootModDir="$parentDir"
+                display "Detected package.json with workspaces in parent directory: $parentDir\n"
+                break
+            fi
+        fi
+        parentDir="$(dirname "$parentDir")"
+    done
 
     local runInstall="n"
     if [[ ! -d "$lclRootModDir/node_modules" ]]; then
@@ -2208,7 +2288,7 @@ set_project_cdk () {
 # then resolves environment variable placeholders in files in the requested 
 # root CDK module directory (optional, based on project settings) and then executes the supplied CDK command
 # Note - this function will set the path to the CDK executable based on project settings
-# param1: the name of the module to run. Should be under iac/roots.
+# param1: the name of the module to run. Should be under iac/roots or where projectIacRootModulePath is set to.
 # param2: the CDK command to execute against the module (e.g. "cdk synth STACK_ID --exclusively")
 exec_cdk_command_for_env () {
 
@@ -2223,7 +2303,7 @@ exec_cdk_command_for_env () {
         exit 1
     fi
 
-    # Convert simple module name to a path under iac/roots/
+    # Convert simple module name to a path under iac/roots/ or where projectIacRootModulePath is set to
     local rootModuleDir=$projectIacRootModuleDir/$myTemplateDirSimpleName
 
     if [[ ! -d "$rootModuleDir" ]]; then
@@ -2268,9 +2348,11 @@ exec_cdk_for_env () {
     local rootModuleDir="$projectIacRootModuleDir/$rootModuleName"
 
     if [[ "$projectCdkClearCache" == "y" ]] && [[ "$CDK_MODE" == "deploy" ]]; then
-        display "Clearing CDK context before running deploy. See 'projectCdkClearCache' in constants.sh to disable."
-        rm "$rootModuleDir/cdk.context.json" 2> /dev/null || true
-        # cdk context --clear
+        
+        if [[ -f "$rootModuleDir/cdk.context.json" ]]; then
+            display "Clearing CDK context (except for acknowledged-issue-numbers) before running deploy. See 'projectCdkClearCache' in constants.sh to disable."
+            jq '{"acknowledged-issue-numbers": .["acknowledged-issue-numbers"]}' $rootModuleDir/cdk.context.json > $rootModuleDir/temp.json && mv $rootModuleDir/temp.json $rootModuleDir/cdk.context.json
+        fi
     fi
     
     display "\n${CYAN}Executing \"cdk $CDK_MODE\" on $rootModuleDir${NC}"
@@ -2311,6 +2393,7 @@ exec_cdk_for_env () {
             $projectCdk destroy -f${cdkArgs} 2>&1 | tee -a "$COIN_LOG_FILE_PATH" # nosemgrep
         else
             exec_package_manager_install
+            exec_package_manager_build_if_needed || return 1
             
             if [[ "$CDK_MODE" == "cdk-nag" ]]; then
                 display "\nExecuting \"$projectCdk synth${cdkArgs}\" for cdk-nag"
@@ -2327,6 +2410,7 @@ exec_cdk_for_env () {
                 $projectCdk deploy${cdkArgs} --require-approval never 2>&1 | tee -a "$COIN_LOG_FILE_PATH" # nosemgrep
             else
                 display "\nExecuting \"$projectCdk diff${cdkArgs} --fail\""
+                display "To skip the automatic diff step for deployments, set the environment variable COIN_CDK_SKIP_DIFF to \"y\""
                 $projectCdk diff${cdkArgs} --fail && cdkDiff="n" || cdkDiff="y" # nosemgrep
 
                 if [[ "$cdkDiff" == "y" ]]; then
@@ -3006,8 +3090,10 @@ get_caller_identity () {
     if [[ "$cliExpires" == "null" ]]; then
         if [[ -z "$AWS_PROFILE" ]]; then
             echo -e "\nCannot determine session expiration since you are not logged in using an AWS_PROFILE\n"
+            return
         else
             echo -e "\nCannot determine session expiration since session expiration data is unavailable for AWS_PROFILE \"$AWS_PROFILE\"\n"
+            return
         fi
     else
         echo -e -n "\n${CYAN}current session expires: ${NC}"
